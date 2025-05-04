@@ -7,11 +7,11 @@ def main():
         load_dotenv()
 
         # Initialize the model
-        model = init_chat_model("claude-3-5-sonnet-latest", model_provider="anthropic")
-
+        model = init_chat_model("claude-3-haiku-20240307", model_provider="anthropic")
+        
         # Create simple messages
-        system_message = SystemMessage("You are a helpful AI assistant.")
-        human_message = HumanMessage("Hello, how are you today?")
+        system_message = SystemMessage("You are a helpful AI assistant you need to follow strictly the documents content.")
+        human_message = HumanMessage("Write 10 random words about Harry Potter")
 
         # Create a list of messages
         messages = [system_message, human_message]
@@ -21,4 +21,5 @@ def main():
 
         # Print the response
         print(response.content)
-            
+
+main()

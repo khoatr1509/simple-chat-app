@@ -6,7 +6,7 @@ from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 load_dotenv()
 
 # Initialize the model
-model = init_chat_model("claude-3-5-sonnet-latest", model_provider="anthropic")
+model = init_chat_model("claude-3-haiku-20240307", model_provider="anthropic")
 
 # Initialize a list to store conversation history
 conversation_memory = []
