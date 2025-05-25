@@ -3,14 +3,20 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+app.mount("/chat_app/static", StaticFiles(directory="chat_app/static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def get_index():
+    with open("chat_app/static/index.html", "r") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
 
 class ChatRequest(BaseModel):
     message: str

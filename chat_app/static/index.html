@@ -24,9 +24,6 @@
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
         
-        // Generate a random session ID
-        const sessionId = Math.random().toString(36).substring(2, 15);
-        
         function addMessage(content, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.className = isUser ? 'user-message' : 'assistant-message';
@@ -47,7 +44,6 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        session_id: sessionId,
                         message: message
                     }),
                 })
