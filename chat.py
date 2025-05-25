@@ -15,6 +15,27 @@ conversation_memory = []
 system_message = SystemMessage("You are a helpful AI assistant.")
 conversation_memory.append(system_message)
 
+def stream_ai_response(user_input):
+    # Add user message to memory
+    user_message = HumanMessage(content=user_input)
+    conversation_memory.append(user_message)
+    
+    print("AI: ", end="", flush=True)
+    response_content = ""
+    
+    # Stream the response synchronously
+    for chunk in model.stream(conversation_memory):
+        if chunk.content:
+            print(chunk.content, end="", flush=True)
+            response_content += chunk.content
+    
+    # Create and add the complete AI message to conversation memory
+    ai_message = AIMessage(content=response_content)
+    conversation_memory.append(ai_message)
+    
+    print()  # Add a newline after response is complete
+    return response_content
+
 # Function to add user message and get AI response
 def get_ai_response(user_input):
     # Add user message to memory
@@ -29,6 +50,9 @@ def get_ai_response(user_input):
     
     return response.content
 
+def get_ai_response_with_streaming(user_input):
+    pass
+
 # Example usage
 print("AI Assistant is ready. Type 'exit' to end the conversation.")
 while True:
@@ -36,8 +60,8 @@ while True:
     if user_input.lower() == "exit":
         break
     
-    ai_response = get_ai_response(user_input)
-    print(f"AI: {ai_response}")
+    ai_response =  stream_ai_response(user_input)
+    # print(f"AI: {ai_response}")
 
 # Print conversation history
 print("\nConversation History:")

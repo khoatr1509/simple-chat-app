@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Assistant Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #chat-container { border: 1px solid #ccc; height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        #user-input { width: 80%; padding: 8px; }
+        #send-button { padding: 8px 15px; }
+        .user-message { text-align: right; margin: 5px; padding: 8px; background-color: #dcf8c6; border-radius: 10px; }
+        .assistant-message { text-align: left; margin: 5px; padding: 8px; background-color: #f1f0f0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Weather Assistant Chat</h1>
+    <div id="chat-container"></div>
+    <div>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        
+        // Generate a random session ID
+        const sessionId = Math.random().toString(36).substring(2, 15);
+        
+        function addMessage(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isUser ? 'user-message' : 'assistant-message';
+            messageDiv.textContent = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+                
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: message
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    addMessage(data.response, false);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addMessage('Sorry, there was an error processing your request.', false);
+                });
+            }
+        }
+        
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
