@@ -36,6 +36,7 @@ source venv/bin/activate
 3. Install the required packages:
 ```bash
 pip install -qU "langchain[anthropic]" python-dotenv
+pip install -r requirements.txt
 ```
 
 4. Create a `.env` file in the root directory and add your Anthropic API key:
