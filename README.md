@@ -60,6 +60,13 @@ Run the advanced version to have a conversation with memory:
 python chat_with_memory.py
 ```
 
+### Advanced FASTAPI App
+Run the advanced version to have a conversation with memory:
+
+```bash
+fastapi dev chat_app/index.py
+```
+
 In the advanced version, type 'exit' to end the conversation. The application will display the entire conversation history at the end.
 
 ## Project Structure
