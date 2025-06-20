@@ -9,11 +9,11 @@ from langchain.chat_models import init_chat_model
 
 app = FastAPI()
 
-app.mount("/chat_app/static", StaticFiles(directory="chat_app/static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index():
-    with open("chat_app/static/index.html", "r") as f:
+    with open("static/index.html", "r") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content, status_code=200)
 
