@@ -12,13 +12,13 @@
     </style>
 </head>
 <body>
-    <h1>Weather Assistant Chat</h1>
+    <h1>Weather Assistant Chat 123</h1>
     <div id="chat-container"></div>
     <div>
         <input type="text" id="user-input" placeholder="Type your message...">
         <button id="send-button">Send</button>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
@@ -27,7 +27,10 @@
         function addMessage(content, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.className = isUser ? 'user-message' : 'assistant-message';
-            messageDiv.textContent = content;
+            
+            console.log(marked.parse(content))
+            messageDiv.innerHTML = marked.parse(content);
+            
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }

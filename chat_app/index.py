@@ -1,12 +1,11 @@
-from typing import Dict, Any, Union
-from langchain_core.messages import HumanMessage, SystemMessage
+from fastapi import FastAPI
 from pydantic import BaseModel
-from langchain.chat_models import init_chat_model
-from dotenv import load_dotenv
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
 
-from fastapi import FastAPI
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain.chat_models import init_chat_model
 
 app = FastAPI()
 
@@ -21,24 +20,27 @@ async def get_index():
 class ChatRequest(BaseModel):
     message: str
 
+# 🔹 Global history list (shared by all users)
+chat_history = [
+    SystemMessage(content="You are a helpful AI assistant.")
+]
+
 @app.post("/chat")
 def chat(request: ChatRequest):
-     # Load environment variables from .env file
     load_dotenv()
 
-    # Initialize the model
-    model = init_chat_model("claude-3-haiku-20240307", model_provider="anthropic")
-    message = request.message
-    # Create simple messages
-    system_message = SystemMessage("You are a helpful AI assistant you need to follow strictly the documents content.")
-    human_message = HumanMessage(message)
+    model = init_chat_model("claude-sonnet-4-20250514", model_provider="anthropic")
 
-    # Create a list of messages
-    messages = [system_message, human_message]
+    # Add the new user message
+    chat_history.append(HumanMessage(content=request.message))
 
-    # Get response from the model
-    response = model.invoke(messages)
+    # Call the model with full history
+    response = model.invoke(chat_history)
+
+    # Append model response to history
+    chat_history.append(AIMessage(content=response.content))
 
     return {
-        "response": response.content
+        "response": response.content,
+        "history": [{"role": m.type, "content": m.content} for m in chat_history]
     }
